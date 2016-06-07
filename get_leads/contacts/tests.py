@@ -12,3 +12,11 @@ class ContactTest(TestCase):
 		self.assertEqual(contact.firstname, 'Steve')
 		self.assertEqual(contact.lastname, 'Roger')
 
+
+class ContactAdminTest(TestCase):
+    def test_contact_admin_page_should_return_302(self):
+        url = '/admin/contacts/contact/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+
+
