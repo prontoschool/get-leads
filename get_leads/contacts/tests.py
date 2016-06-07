@@ -25,4 +25,8 @@ class ContactViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
+    def test_contact_view_should_to_see_hello(self):
+        url = '/contact/'
+        response = self.client.get(url)
+        self.assertContains(response, 'hello, intern', status_code=200)
 
