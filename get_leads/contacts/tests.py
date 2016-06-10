@@ -47,6 +47,11 @@ class ContactViewTest(TestCase):
         self.assertContains(response, '<button type="submit">Submit</button>',status_code=200)
 
 
+    def test_contact_view_should_see_contact_form(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, 'Contact Form', status_code=200)
+
+
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
         url = '/contact/thankyou/'
