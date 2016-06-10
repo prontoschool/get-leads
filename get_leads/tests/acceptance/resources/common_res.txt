@@ -1,0 +1,14 @@
+*** Settings ***
+Documentation    Initial data
+Library        Selenium2Library
+Library        XvfbRobot
+Resource       common_res.txt 
+
+*** Variables ***
+${Get Leads URL}    http://0.0.0.0:8000
+
+*** Keywords ***
+Open Site 
+    Start Virtual Display
+    Open Browser    ${Get Leads URL}   Firefox
+    Set Window Size    1920    1080
