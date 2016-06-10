@@ -51,6 +51,16 @@ class ContactViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, 'Contact Form', status_code=200)
 
+    def test_contact_post_should_save_data(self):
+        data = {
+            'firstname': 'Dao',
+            'lastname': 'Duan'
+        }
+        response = self.client.post(self.url, data=data)
+        contact = Contact.objects.first()
+        self.assertEqual(contact.firstname, 'Dao')
+        self.assertEqual(contact.lastname, 'Duan')
+
 
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
