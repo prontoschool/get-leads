@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from .models import Contact
@@ -80,3 +81,36 @@ class ThankyouViewTest(TestCase):
         url = '/contact/thankyou/'
         response = self.client.get(url)
         self.assertContains(response, 'Thank You!', status_code=200)
+
+
+class ContactAdminTest(TestCase):
+    def test_contact_admin_should_have_firstname_column(self):
+        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.save()
+
+        response =  self.client.get('/admin/contacts/contact/')
+        self.assertContains(response, '<div class="text"><a href="?o=1">Firstname</a></div>', status_code=200)
+
+    def test_contact_admin_should_have_lastname_column(self):
+        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.save()
+
+        response =  self.client.get('/admin/contacts/contact/')
+        print response
+        self.assertContains(response, '<div class="text"><a href="?o=2">Lastname</a></div>', status_code=200)
