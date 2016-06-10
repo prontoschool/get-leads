@@ -31,7 +31,10 @@ class ContactViewTest(TestCase):
         response = self.client.get(url)
         self.assertContains(response, '<form action="thankyou.html" method="post">', status_code=200)
 
-
+    def test_contact_view_should_see_firstname_box(self):
+        url = '/contact/'
+        response = self.client.get(url)
+        self.assertContains(response, '<input type="text" name="firstname">',status_code=200)
 
 
 class ThankyouViewTest(TestCase):
