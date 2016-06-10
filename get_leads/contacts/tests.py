@@ -19,6 +19,7 @@ class ContactAdminTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
+
 class ContactViewTest(TestCase):
     def test_contact_view_should_return_200(self):
         url = '/contact/'
@@ -32,3 +33,9 @@ class ContactViewTest(TestCase):
 
 
 
+
+class ThankyouViewTest(TestCase):
+    def test_thankyou_view_should_return_200(self):
+        url = '/contact/thankyou/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

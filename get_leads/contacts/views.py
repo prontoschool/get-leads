@@ -7,3 +7,7 @@ class ContactView(TemplateView):
     template_name = 'home.html'
     def get(self, request):
         return render(request, self.template_name, {'name': 'intern'})
+
+class ThankyouView(TemplateView):
+    def get(self, request):
+        return HttpResponse()
