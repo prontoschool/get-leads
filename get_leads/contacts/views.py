@@ -1,6 +1,7 @@
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.http import HttpResponse
 
 from .models import Contact
 
@@ -16,7 +17,7 @@ class ContactView(TemplateView):
         contact.firstname = request.POST.get('firstname')
         contact.lastname = request.POST.get('lastname')
         contact.save()
-        return HttpResponse()
+        return HttpResponseRedirect(reverse('thankyou'))
 
 
 class ThankyouView(TemplateView):

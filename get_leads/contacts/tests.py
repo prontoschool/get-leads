@@ -61,6 +61,14 @@ class ContactViewTest(TestCase):
         self.assertEqual(contact.firstname, 'Dao')
         self.assertEqual(contact.lastname, 'Duan')
 
+    def test_contact_submit_should_see_thankyou(self):
+        data = {
+            'firstname': 'Dao',
+            'lastname': 'Duan'
+        }
+        response = self.client.post(self.url, data=data, follow=True)
+        self.assertContains(response, 'Thank You!', status_code=200)
+
 
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
