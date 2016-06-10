@@ -8,4 +8,4 @@ Documentation    First tc
 *** Test Cases ***
 Visit contact page
 	Go To     ${Get Leads URL}/contact/
-	Page Should Contain     Good Afternoon, intern! 
+	Page Should Contain     Contact Form 
