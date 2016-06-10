@@ -37,3 +37,8 @@ class ThankyouViewTest(TestCase):
         url = '/contact/thankyou/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_thankyou_view_should_to_see_thankyou(self):
+        url = '/contact/thankyou/'
+        response = self.client.get(url)
+        self.assertContains(response, 'Thank You!', status_code=200)
