@@ -5,14 +5,16 @@ from .models import Contact
 
 
 class ContactTest(TestCase):
-    def test_contact_should_have_firstname_and_lastname(self):
+    def test_contact_should_have_firstname_and_lastname_email(self):
         contact = Contact()
         contact.firstname = 'Steve'
         contact.lastname = 'Roger'
+        contact.email = 'example@prontotools.com'
         contact.save()
         contact = Contact.objects.first()
         self.assertEqual(contact.firstname, 'Steve')
         self.assertEqual(contact.lastname, 'Roger')
+        self.assertEqual(contact.email, 'example@prontotools.com')
 
 
 class ContactAdminTest(TestCase):
