@@ -16,6 +16,7 @@ class ContactView(TemplateView):
         contact = Contact()
         contact.firstname = request.POST.get('firstname')
         contact.lastname = request.POST.get('lastname')
+        contact.email = request.POST.get('email')
         contact.save()
         return HttpResponseRedirect(reverse('thankyou'))
 
