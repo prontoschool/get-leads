@@ -123,3 +123,19 @@ class ContactAdminTest(TestCase):
 
         response =  self.client.get('/admin/contacts/contact/')
         self.assertContains(response, '<div class="text"><a href="?o=2">Lastname</a></div>', status_code=200)
+
+    def test_contact_admin_should_have_email_column(self):
+        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.email = 'burasakorn@prontomarketing.com'
+        contact.save()
+
+        response =  self.client.get('/admin/contacts/contact/')
+        self.assertContains(response, '<div class="text"><a href="?o=3">Email</a></div>', status_code=200)
