@@ -57,17 +57,20 @@ class ContactViewTest(TestCase):
     def test_contact_post_should_save_data(self):
         data = {
             'firstname': 'Dao',
-            'lastname': 'Duan'
+            'lastname': 'Duan',
+            'email': 'example@prontotools.com'
         }
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
         self.assertEqual(contact.firstname, 'Dao')
         self.assertEqual(contact.lastname, 'Duan')
+        self.assertEqual(contact.email, 'example@prontotools.com')
 
     def test_contact_submit_should_see_thankyou(self):
         data = {
             'firstname': 'Dao',
-            'lastname': 'Duan'
+            'lastname': 'Duan',
+            'email': 'example@prontotools.com'
         }
         response = self.client.post(self.url, data=data, follow=True)
         self.assertContains(response, 'Thank You!', status_code=200)
@@ -100,6 +103,7 @@ class ContactAdminTest(TestCase):
         contact = Contact()
         contact.firstname = 'Dao'
         contact.lastname = 'Duan'
+        contact.email = 'example@prontotools.com'
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
