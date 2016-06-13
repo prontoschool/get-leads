@@ -70,6 +70,10 @@ class ContactViewTest(TestCase):
         response = self.client.post(self.url, data=data, follow=True)
         self.assertContains(response, 'Thank You!', status_code=200)
 
+    def test_contact_view_should_see_email_box(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, '<input type="text" name="email">',status_code=200)
+
 
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
@@ -112,5 +116,4 @@ class ContactAdminTest(TestCase):
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
-        print response
         self.assertContains(response, '<div class="text"><a href="?o=2">Lastname</a></div>', status_code=200)
