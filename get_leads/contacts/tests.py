@@ -73,7 +73,7 @@ class ContactViewTest(TestCase):
             'email': 'example@prontotools.com'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        self.assertContains(response, 'Thank You!', status_code=200)
+        self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
     def test_contact_view_should_see_email_box(self):
         response = self.client.get(self.url)
@@ -82,14 +82,25 @@ class ContactViewTest(TestCase):
 
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.email = 'example@prontotools.com'
+        contact.save()
         url = '/contact/thankyou/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_thankyou_view_should_to_see_thankyou(self):
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.email = 'example@prontotools.com'
+        contact.save()
         url = '/contact/thankyou/'
         response = self.client.get(url)
-        self.assertContains(response, 'Thank You!', status_code=200)
+        print response
+        self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
 
 class ContactAdminTest(TestCase):

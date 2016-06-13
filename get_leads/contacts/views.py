@@ -25,4 +25,5 @@ class ThankyouView(TemplateView):
     template_name = 'thankyou.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        contact = Contact.objects.latest('id')
+        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email})
