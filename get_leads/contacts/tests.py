@@ -7,18 +7,16 @@ from .models import Contact
 import requests
 
 class ContactTest(TestCase):
-    def test_contact_should_have_firstname_and_lastname_email_ip(self):
+    def test_contact_should_have_firstname_and_lastname_email(self):
         contact = Contact()
         contact.firstname = 'Steve'
         contact.lastname = 'Roger'
         contact.email = 'example@prontotools.com'
-        contact.ip = '192.168.1.1'
         contact.save()
         contact = Contact.objects.first()
         self.assertEqual(contact.firstname, 'Steve')
         self.assertEqual(contact.lastname, 'Roger')
         self.assertEqual(contact.email, 'example@prontotools.com')
-        self.assertEqual(contact.ip, '192.168.1.1')
 
 
 class ContactAdminTest(TestCase):
