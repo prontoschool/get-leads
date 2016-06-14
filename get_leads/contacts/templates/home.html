@@ -12,11 +12,11 @@
             <form action="." method="post">
                 {% csrf_token %}
                  <label for="firstname"> First name:</label>
-                 <input type="text" name="firstname">
+                 {{ contact_form.firstname}}
                  <label for="lastname"> Last name:</label>
-                 <input type="text" name="lastname"><br><br>
+                 {{ contact_form.lastname}}
                  <label for="email"> E-mail:</label>
-                 <input type="text" name="email"><br><br>
+                 {{ contact_form.email}}
                  <button type="submit">Submit</button>
             </form>
         </div>

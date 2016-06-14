@@ -4,13 +4,16 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from .models import Contact
+from .forms import ContactForm
 
 
 class ContactView(TemplateView):
     template_name = 'home.html'
 
     def get(self, request):
-        return render(request, self.template_name, {'name': 'intern'})
+        form = ContactForm()
+
+        return render(request, self.template_name, {'contact_form': form})
 
     def post(self, request):
         contact = Contact()

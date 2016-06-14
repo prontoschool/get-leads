@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
+
+from .forms import ContactForm
 from .models import Contact
 
 
@@ -38,11 +40,11 @@ class ContactViewTest(TestCase):
 
     def test_contact_view_should_see_firstname_box(self):
         response = self.client.get(self.url)
-        self.assertContains(response, '<input type="text" name="firstname">',status_code=200)
+        self.assertContains(response, '<input id="id_firstname" name="firstname" type="text" />',status_code=200)
 
     def test_contact_view_should_see_lastname_box(self):
         response = self.client.get(self.url)
-        self.assertContains(response, '<input type="text" name="lastname">',status_code=200)
+        self.assertContains(response, '<input id="id_lastname" name="lastname" type="text" />',status_code=200)
 
 
     def test_contact_view_should_see_submit_button(self):
@@ -77,7 +79,7 @@ class ContactViewTest(TestCase):
 
     def test_contact_view_should_see_email_box(self):
         response = self.client.get(self.url)
-        self.assertContains(response, '<input type="text" name="email">',status_code=200)
+        self.assertContains(response, '<input id="id_email" name="email" type="email" />',status_code=200)
 
 
 class ThankyouViewTest(TestCase):
@@ -99,7 +101,6 @@ class ThankyouViewTest(TestCase):
         contact.save()
         url = '/contact/thankyou/'
         response = self.client.get(url)
-        print response
         self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
 
@@ -150,3 +151,36 @@ class ContactAdminTest(TestCase):
 
         response =  self.client.get('/admin/contacts/contact/')
         self.assertContains(response, '<div class="text"><a href="?o=3">Email</a></div>', status_code=200)
+
+
+class ContactFormTest(TestCase):
+    def test_form_should_contain_all_defined_fields(self):
+        form = ContactForm()
+        self.assertTrue('firstname' in form.fields)
+        self.assertTrue('lastname' in form.fields)
+        self.assertTrue('email' in form.fields)
+
+    def test_form_is_valid_with_valid_input(self):
+        valid_data = {
+            'firstname': 'Dao',
+            'lastname': 'Duan',
+            'email': 'duan@pronto.com'
+        }
+
+        form = ContactForm(data=valid_data)
+
+        self.assertTrue(form.is_valid())
+        self.assertFalse(form.errors)
+
+    def test_form_is_invalid_with_when_some_input_missing(self):
+        invalid_data = {
+            'firstname': 'Dao',
+            'lastname': 'Duan',
+            'email': ''
+        }
+
+        form = ContactForm(data=invalid_data)
+
+        self.assertFalse(form.is_valid())
+        self.assertTrue(form.errors)
+
