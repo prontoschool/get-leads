@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from .forms import ContactForm
 from .models import Contact
-
+import requests
 
 class ContactTest(TestCase):
     def test_contact_should_have_firstname_and_lastname_email(self):
@@ -75,7 +75,7 @@ class ContactViewTest(TestCase):
             'email': 'example@prontotools.com'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
+        self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com. IP: 58.137.162.34', status_code=200)
 
     def test_contact_view_should_see_email_box(self):
         response = self.client.get(self.url)

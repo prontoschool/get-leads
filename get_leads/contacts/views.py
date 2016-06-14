@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 
 from .models import Contact
 from .forms import ContactForm
+import requests
 
 
 class ContactView(TemplateView):
@@ -34,4 +35,6 @@ class ThankyouView(TemplateView):
 
     def get(self, request):
         contact = Contact.objects.latest('id')
-        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email})
+        r = requests.get('https://api.ipify.org?format=json')
+        data = r.json()
+        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email, 'ip': data['ip']})
