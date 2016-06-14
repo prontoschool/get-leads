@@ -21,7 +21,12 @@ class ContactView(TemplateView):
         contact.lastname = request.POST.get('lastname')
         contact.email = request.POST.get('email')
         contact.save()
-        return HttpResponseRedirect(reverse('thankyou'))
+
+        form = ContactForm(data=request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('thankyou'))
+        else:
+            return render(request, self.template_name, {'contact_form': form})
 
 
 class ThankyouView(TemplateView):

@@ -81,6 +81,15 @@ class ContactViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, '<input id="id_email" name="email" type="email" />',status_code=200)
 
+    def test_contact_submit_invalid_input_should_not_see_thankyou(self):
+        data = {
+            'firstname': 'Dao',
+            'lastname': 'Duan',
+            'email': ''
+        }
+        response = self.client.post(self.url, data=data, follow=True)
+        self.assertNotContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
+
 
 class ThankyouViewTest(TestCase):
     def test_thankyou_view_should_return_200(self):
