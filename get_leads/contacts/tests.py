@@ -69,6 +69,7 @@ class ContactViewTest(TestCase):
         self.assertEqual(contact.firstname, 'Dao')
         self.assertEqual(contact.lastname, 'Duan')
         self.assertEqual(contact.email, 'example@prontotools.com')
+        self.assertEqual(contact.ip, '58.137.162.34')
 
     def test_contact_submit_should_see_thankyou(self):
         data = {
@@ -127,6 +128,7 @@ class ContactAdminTest(TestCase):
         contact.firstname = 'Dao'
         contact.lastname = 'Duan'
         contact.email = 'example@prontotools.com'
+        contact.ip = '58.137.162.34'
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
@@ -142,6 +144,7 @@ class ContactAdminTest(TestCase):
         contact = Contact()
         contact.firstname = 'Dao'
         contact.lastname = 'Duan'
+        contact.ip = '58.137.162.34'
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
@@ -158,11 +161,29 @@ class ContactAdminTest(TestCase):
         contact.firstname = 'Dao'
         contact.lastname = 'Duan'
         contact.email = 'burasakorn@prontomarketing.com'
+        contact.ip = '58.137.162.34'
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
         self.assertContains(response, '<div class="text"><a href="?o=3">Email</a></div>', status_code=200)
 
+
+    def test_contact_admin_should_have_ip_column(self):
+        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.email = 'burasakorn@prontomarketing.com'
+        contact.ip = '58.137.162.34'
+        contact.save()
+
+        response =  self.client.get('/admin/contacts/contact/')
+        self.assertContains(response, '<div class="text"><a href="?o=4">Ip</a></div>', status_code=200)
 
 class ContactFormTest(TestCase):
     def test_form_should_contain_all_defined_fields(self):

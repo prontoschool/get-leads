@@ -17,10 +17,14 @@ class ContactView(TemplateView):
         return render(request, self.template_name, {'contact_form': form})
 
     def post(self, request):
+        json_user_ip = requests.get('https://api.ipify.org?format=json')
+        data = json_user_ip.json()
+
         contact = Contact()
         contact.firstname = request.POST.get('firstname')
         contact.lastname = request.POST.get('lastname')
         contact.email = request.POST.get('email')
+        contact.ip = data['ip']
         contact.save()
 
         form = ContactForm(data=request.POST)
