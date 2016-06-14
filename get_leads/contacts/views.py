@@ -21,6 +21,9 @@ class ContactView(TemplateView):
         contact.firstname = request.POST.get('firstname')
         contact.lastname = request.POST.get('lastname')
         contact.email = request.POST.get('email')
+        r = requests.get('https://api.ipify.org?format=json')
+        data = r.json()
+        contact.ip = data['ip']
         contact.save()
 
         form = ContactForm(data=request.POST)
