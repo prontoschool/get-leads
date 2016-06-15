@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -56,12 +58,15 @@ class ContactViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, 'Contact Form', status_code=200)
 
-    def test_contact_post_should_save_data(self):
+    @patch.object(requests, 'get')
+    def test_contact_post_should_save_data(self, mock_get_requests):
         data = {
             'firstname': 'Dao',
             'lastname': 'Duan',
             'email': 'example@prontotools.com'
         }
+
+        mock_get_requests.return_value.json.return_value = {'ip': '58.137.162.34'}
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
         self.assertEqual(contact.firstname, 'Dao')
