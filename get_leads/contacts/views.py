@@ -18,8 +18,9 @@ class ContactView(TemplateView):
 
     def post(self, request):
         contact = Contact()
-        contact.firstname = request.POST.get('firstname')
-        contact.lastname = request.POST.get('lastname')
+        contact.name = request.POST.get('firstname') + ' ' + request.POST.get('lastname')
+        #contact.firstname = request.POST.get('firstname')
+        #contact.lastname = request.POST.get('lastname')
         contact.email = request.POST.get('email')
         r = requests.get('https://api.ipify.org?format=json')
         data = r.json()
@@ -38,4 +39,4 @@ class ThankyouView(TemplateView):
 
     def get(self, request):
         contact = Contact.objects.latest('id')
-        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email, 'ip': contact.ip})
+        return render(request, self.template_name, {'name': contact.name,'email': contact.email, 'ip': contact.ip})

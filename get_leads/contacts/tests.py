@@ -11,13 +11,11 @@ import requests
 class ContactTest(TestCase):
     def test_contact_should_have_firstname_and_lastname_email(self):
         contact = Contact()
-        contact.firstname = 'Steve'
-        contact.lastname = 'Roger'
+        contact.name = 'Steve Roger'
         contact.email = 'example@prontotools.com'
         contact.save()
         contact = Contact.objects.first()
-        self.assertEqual(contact.firstname, 'Steve')
-        self.assertEqual(contact.lastname, 'Roger')
+        self.assertEqual(contact.name, 'Steve Roger')
         self.assertEqual(contact.email, 'example@prontotools.com')
 
 
@@ -71,8 +69,8 @@ class ContactViewTest(TestCase):
         }
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
-        self.assertEqual(contact.firstname, 'Dao')
-        self.assertEqual(contact.lastname, 'Duan')
+        self.assertEqual(contact.name, 'Dao Duan')
+        #self.assertEqual(contact.lastname, 'Duan')
         self.assertEqual(contact.email, 'example@prontotools.com')
         self.assertEqual(contact.ip, '58.137.162.34')
         mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
@@ -125,8 +123,7 @@ class ThankyouViewTest(TestCase):
 
     def test_thankyou_view_should_to_see_thankyou(self):
         contact = Contact()
-        contact.firstname = 'Dao'
-        contact.lastname = 'Duan'
+        contact.name = 'Dao Duan'
         contact.email = 'example@prontotools.com'
         contact.save()
         url = '/contact/thankyou/'
@@ -135,7 +132,7 @@ class ThankyouViewTest(TestCase):
 
 
 class ContactAdminTest(TestCase):
-    def test_contact_admin_should_have_firstname_column(self):
+    def test_contact_admin_should_have_name_column(self):
         User.objects.create_superuser('admin', 'admin@test.com', 'admin')
         self.client.login(
             username='admin',
@@ -150,23 +147,7 @@ class ContactAdminTest(TestCase):
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
-        self.assertContains(response, '<div class="text"><a href="?o=1">Firstname</a></div>', status_code=200)
-
-    def test_contact_admin_should_have_lastname_column(self):
-        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
-        self.client.login(
-            username='admin',
-            password='admin'
-        )
-
-        contact = Contact()
-        contact.firstname = 'Dao'
-        contact.lastname = 'Duan'
-        contact.ip = '58.137.162.34'
-        contact.save()
-
-        response =  self.client.get('/admin/contacts/contact/')
-        self.assertContains(response, '<div class="text"><a href="?o=2">Lastname</a></div>', status_code=200)
+        self.assertContains(response, '<div class="text"><a href="?o=1">Name</a></div>', status_code=200)
 
     def test_contact_admin_should_have_email_column(self):
         User.objects.create_superuser('admin', 'admin@test.com', 'admin')
@@ -183,7 +164,7 @@ class ContactAdminTest(TestCase):
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
-        self.assertContains(response, '<div class="text"><a href="?o=3">Email</a></div>', status_code=200)
+        self.assertContains(response, '<div class="text"><a href="?o=2">Email</a></div>', status_code=200)
 
 
     def test_contact_admin_should_have_ip_column(self):
@@ -201,7 +182,7 @@ class ContactAdminTest(TestCase):
         contact.save()
 
         response =  self.client.get('/admin/contacts/contact/')
-        self.assertContains(response, '<div class="text"><a href="?o=4">Ip</a></div>', status_code=200)
+        self.assertContains(response, '<div class="text"><a href="?o=3">Ip</a></div>', status_code=200)
 
 class ContactFormTest(TestCase):
     def test_form_should_contain_all_defined_fields(self):
