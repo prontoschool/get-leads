@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contact',
             name='email',
-            field=models.EmailField(default='exit', max_length=254),
+            field=models.EmailField(default='', max_length=254),
             preserve_default=False,
         ),
     ]
