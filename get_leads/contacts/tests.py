@@ -65,15 +65,17 @@ class ContactViewTest(TestCase):
         }
         get_request = mock_get_requests.return_value
         get_request.json.return_value = {
-            'ip': '58.137.162.34'
+            'ip': '58.137.162.34',
+            'country': 'Thailand'
         }
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
         self.assertEqual(contact.name, 'Dao Duan')
-        #self.assertEqual(contact.lastname, 'Duan')
         self.assertEqual(contact.email, 'example@prontotools.com')
         self.assertEqual(contact.ip, '58.137.162.34')
-        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
+        self.assertEqual(contact.country, 'Thailand')
+        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
+        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
 
     @patch('contacts.views.requests.get')
     def test_contact_submit_should_see_thankyou(self, mock_get_requests):
@@ -84,10 +86,12 @@ class ContactViewTest(TestCase):
         }
         get_request = mock_get_requests.return_value
         get_request.json.return_value = {
-            'ip': '58.137.162.34'
+            'ip': '58.137.162.34',
+            'country': 'Mar'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
+        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
+        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
         self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com. IP: 58.137.162.34', status_code=200)
 
     def test_contact_view_should_see_email_box(self):
@@ -103,10 +107,12 @@ class ContactViewTest(TestCase):
         }
         get_request = mock_get_requests.return_value
         get_request.json.return_value = {
-            'ip': 'x.x.x.x'
+            'ip': 'x.x.x.x',
+            'country': 'Mar'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
+        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
+        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
         self.assertNotContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
 
@@ -166,7 +172,6 @@ class ContactAdminTest(TestCase):
         response =  self.client.get('/admin/contacts/contact/')
         self.assertContains(response, '<div class="text"><a href="?o=2">Email</a></div>', status_code=200)
 
-
     def test_contact_admin_should_have_ip_column(self):
         User.objects.create_superuser('admin', 'admin@test.com', 'admin')
         self.client.login(
@@ -183,6 +188,25 @@ class ContactAdminTest(TestCase):
 
         response =  self.client.get('/admin/contacts/contact/')
         self.assertContains(response, '<div class="text"><a href="?o=3">Ip</a></div>', status_code=200)
+
+    def test_contact_admin_should_have_country_column(self):
+        User.objects.create_superuser('admin', 'admin@test.com', 'admin')
+        self.client.login(
+            username='admin',
+            password='admin'
+        )
+
+        contact = Contact()
+        contact.firstname = 'Dao'
+        contact.lastname = 'Duan'
+        contact.email = 'burasakorn@prontomarketing.com'
+        contact.ip = '58.137.162.34'
+        contact.country = 'Mar'
+        contact.save()
+
+        response =  self.client.get('/admin/contacts/contact/')
+        self.assertContains(response, '<div class="text"><a href="?o=4">Country</a></div>', status_code=200)
+
 
 class ContactFormTest(TestCase):
     def test_form_should_contain_all_defined_fields(self):
