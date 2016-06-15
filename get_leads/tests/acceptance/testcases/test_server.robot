@@ -15,5 +15,6 @@ Visit contact page
     Page Should Contain    Contact Form
     Input Text    xpath=//input[@name='firstname']     Steve
     Input Text    xpath=//input[@name='lastname']      Roger
+    Input Text    xpath=//input[@name='email']     steve@pronto.com
     Click Button      Submit
-    Page Should Contain     Thank You!
+    Page Should Contain     Thank You
