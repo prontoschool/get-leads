@@ -38,6 +38,4 @@ class ThankyouView(TemplateView):
 
     def get(self, request):
         contact = Contact.objects.latest('id')
-        r = requests.get('https://api.ipify.org?format=json')
-        data = r.json()
-        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email, 'ip': data['ip']})
+        return render(request, self.template_name, {'firstname': contact.firstname,'lastname': contact.lastname,'email': contact.email, 'ip': contact.ip})

@@ -3,10 +3,10 @@ from mock import patch
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-
 from .forms import ContactForm
 from .models import Contact
 import requests
+
 
 class ContactTest(TestCase):
     def test_contact_should_have_firstname_and_lastname_email(self):
@@ -58,42 +58,57 @@ class ContactViewTest(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, 'Contact Form', status_code=200)
 
-    @patch.object(requests, 'get')
+    @patch('contacts.views.requests.get')
     def test_contact_post_should_save_data(self, mock_get_requests):
         data = {
             'firstname': 'Dao',
             'lastname': 'Duan',
             'email': 'example@prontotools.com'
         }
-
-        mock_get_requests.return_value.json.return_value = {'ip': '58.137.162.34'}
+        get_request = mock_get_requests.return_value
+        get_request.json.return_value = {
+            'ip': '58.137.162.34'
+        }
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
         self.assertEqual(contact.firstname, 'Dao')
         self.assertEqual(contact.lastname, 'Duan')
         self.assertEqual(contact.email, 'example@prontotools.com')
         self.assertEqual(contact.ip, '58.137.162.34')
+        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
 
-    def test_contact_submit_should_see_thankyou(self):
+    @patch('contacts.views.requests.get')
+    def test_contact_submit_should_see_thankyou(self, mock_get_requests):
         data = {
             'firstname': 'Dao',
             'lastname': 'Duan',
             'email': 'example@prontotools.com'
         }
+        get_request = mock_get_requests.return_value
+        get_request.json.return_value = {
+            'ip': '58.137.162.34'
+        }
         response = self.client.post(self.url, data=data, follow=True)
+        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
         self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com. IP: 58.137.162.34', status_code=200)
 
     def test_contact_view_should_see_email_box(self):
         response = self.client.get(self.url)
         self.assertContains(response, '<input id="id_email" name="email" type="email" />',status_code=200)
 
-    def test_contact_submit_invalid_input_should_not_see_thankyou(self):
+    @patch('contacts.views.requests.get')
+    def test_contact_submit_invalid_input_should_not_see_thankyou(self, mock_get_requests):
         data = {
             'firstname': 'Dao',
             'lastname': 'Duan',
             'email': ''
         }
+        get_request = mock_get_requests.return_value
+        get_request.json.return_value = {
+            'ip': 'x.x.x.x'
+        }
         response = self.client.post(self.url, data=data, follow=True)
+        mock_get_requests.assert_called_once_with('https://api.ipify.org?format=json')
         self.assertNotContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
 
