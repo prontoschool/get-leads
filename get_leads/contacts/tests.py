@@ -1,4 +1,4 @@
-from mock import patch
+from mock import patch,call
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -68,14 +68,17 @@ class ContactViewTest(TestCase):
             'ip': '58.137.162.34',
             'country': 'Thailand'
         }
+        expect_calls = [
+            call('https://api.ipify.org?format=json'),
+            call('http://ip-api.com/json?fields=country')
+        ]
         response = self.client.post(self.url, data=data)
         contact = Contact.objects.first()
         self.assertEqual(contact.name, 'Dao Duan')
         self.assertEqual(contact.email, 'example@prontotools.com')
         self.assertEqual(contact.ip, '58.137.162.34')
         self.assertEqual(contact.country, 'Thailand')
-        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
-        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
+        mock_get_requests.assert_has_calls(expect_calls)
 
     @patch('contacts.views.requests.get')
     def test_contact_submit_should_see_thankyou(self, mock_get_requests):
@@ -84,14 +87,17 @@ class ContactViewTest(TestCase):
             'lastname': 'Duan',
             'email': 'example@prontotools.com'
         }
+        expect_calls = [
+            call('https://api.ipify.org?format=json'),
+            call('http://ip-api.com/json?fields=country')
+        ]
         get_request = mock_get_requests.return_value
         get_request.json.return_value = {
             'ip': '58.137.162.34',
             'country': 'Mar'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
-        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
+        mock_get_requests.assert_has_calls(expect_calls)
         self.assertContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com. IP: 58.137.162.34', status_code=200)
 
     def test_contact_view_should_see_email_box(self):
@@ -105,14 +111,17 @@ class ContactViewTest(TestCase):
             'lastname': 'Duan',
             'email': ''
         }
+        expect_calls = [
+            call('https://api.ipify.org?format=json'),
+            call('http://ip-api.com/json?fields=country')
+        ]
         get_request = mock_get_requests.return_value
         get_request.json.return_value = {
             'ip': 'x.x.x.x',
             'country': 'Mar'
         }
         response = self.client.post(self.url, data=data, follow=True)
-        mock_get_requests.assert_any_call('https://api.ipify.org?format=json')
-        mock_get_requests.assert_any_call('http://ip-api.com/json?fields=country')
+        mock_get_requests.assert_has_calls(expect_calls)
         self.assertNotContains(response, 'Thank You!, Dao Duan. Email is example@prontotools.com', status_code=200)
 
 
